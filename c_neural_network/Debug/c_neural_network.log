@@ -1,16 +1,16 @@
-﻿Build started 14/11/2022 11:15:20 AM.
-     1>Project "C:\Users\f2020376037\Downloads\c_neural_network\c_neural_network\c_neural_network.vcxproj" on node 2 (Build target(s)).
+﻿Build started 15/11/2022 2:05:35 PM.
+     1>Project "Z:\c_neural_network-main\c_neural_network-main\c_neural_network\c_neural_network.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt activation_functions.c neural_net.c
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt neural_net.c
          neural_net.c
-         activation_functions.c
-         Generating Code...
+     1>z:\c_neural_network-main\c_neural_network-main\c_neural_network\neural_net.c(34): warning C4013: 'time' undefined; assuming extern returning int
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\f2020376037\Downloads\c_neural_network\Debug\c_neural_network.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\f2020376037\Downloads\c_neural_network\Debug\c_neural_network.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\f2020376037\Downloads\c_neural_network\Debug\c_neural_network.lib" /MACHINE:X86 Debug\activation_functions.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Z:\c_neural_network-main\c_neural_network-main\Debug\c_neural_network.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Z:\c_neural_network-main\c_neural_network-main\Debug\c_neural_network.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Z:\c_neural_network-main\c_neural_network-main\Debug\c_neural_network.lib" /MACHINE:X86 Debug\activation_functions.obj
          Debug\neural_net.obj
-         c_neural_network.vcxproj -> C:\Users\f2020376037\Downloads\c_neural_network\Debug\c_neural_network.exe
-     1>Done Building Project "C:\Users\f2020376037\Downloads\c_neural_network\c_neural_network\c_neural_network.vcxproj" (Build target(s)).
+         LINK : Z:\c_neural_network-main\c_neural_network-main\Debug\c_neural_network.exe not found or not built by the last incremental link; performing full link
+     1>LINK : fatal error LNK1561: entry point must be defined
+     1>Done Building Project "Z:\c_neural_network-main\c_neural_network-main\c_neural_network\c_neural_network.vcxproj" (Build target(s)) -- FAILED.
 
-Build succeeded.
+Build FAILED.
 
-Time Elapsed 00:00:00.59
+Time Elapsed 00:00:22.25

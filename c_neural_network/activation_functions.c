@@ -46,23 +46,24 @@ static void SOFTMAX(double *input, size_t input_len) {
 		input[i] = pow(EULER_CONST, input[i] - offset);
 }
 
-int main()
-{
-	printf("SIGMOID(5) = %.5f \n", SIGMOID(5));
-	printf("TANH(1) = %.5f \n", TANH(1));
-	printf("ReLU(-1) = %d \n", ReLU(-1));
-	printf("DReLU(0) = %d \n", DReLU(0));
-	printf("LReLU(10) = %.5f \n", LReLU(10));
-	printf("PReLU(0.5, 10) = %.5f \n", PReLU(0.5, 10));
-	printf("ELU(0.5, 10) = %.5f \n", ELU(0.5, 10));
-	// SOFTMAX
-	double arr[7] = { 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0 };
-	SOFTMAX(arr, 7);
-	printf("SOFTMAX({ 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0 }, 7) = %.7f %.7f %.7f %.7f %.7f %.7f %.7f\n", arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
-	// SWISH
-	printf("SWISH(10) = %.5f \n", SWISH(10));
-	printf("GELU(10) = %.5f \n", GELU(10));
-
-	int output;
-	scanf_s("%d", &output);
-}
+//int main()
+//{
+//	printf("SIGMOID(5) = %.5f \n", SIGMOID(5));
+//	printf("TANH(1) = %.5f \n", TANH(1));
+//	printf("ReLU(-1) = %d \n", ReLU(-1));
+//	printf("DReLU(0) = %d \n", DReLU(0));
+//	printf("LReLU(10) = %.5f \n", LReLU(10));
+//	printf("PReLU(0.5, 10) = %.5f \n", PReLU(0.5, 10));
+//	printf("ELU(0.5, 10) = %.5f \n", ELU(0.5, 10));
+//	// SOFTMAX
+//	double arr[7] = { 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0 };
+//	SOFTMAX(arr, 7);
+//	printf("SOFTMAX({ 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0 }, 7) = \
+//		%.7f %.7f %.7f %.7f %.7f %.7f %.7f\n", arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6]);
+//	// SWISH
+//	printf("SWISH(10) = %.5f \n", SWISH(10));
+//	printf("GELU(10) = %.5f \n", GELU(10));
+//
+//	int output;
+//	scanf_s("%d", &output);
+//}
