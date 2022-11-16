@@ -21,7 +21,9 @@
 #define DOUBLE_MAX 1.7976931348623158e+308 
 
 #define SIGMOID(x) 1/(1 + pow(EULER_CONST, -x))
+#define D_SIGMOID(x) ((SIGMOID(x))(1-SIGMOID(x)))
 #define TANH(x) ((pow(EULER_CONST, x) - pow(EULER_CONST, -x))/(pow(EULER_CONST, x) + pow(EULER_CONST, -x)))
+#define D_TANH(x) (1-pow(TANH(x), 2))
 #define ReLU(x) (MAX(0, x))
 #define DReLU(x) (x >= 0 ? 1 : 0) // Dying ReLU
 #define LReLU(x) (MAX(MULT(0.1, x), x)) // Leaky ReLU
