@@ -1,8 +1,11 @@
-﻿Build started 15/11/2022 2:30:04 PM.
+﻿Build started 16/11/2022 12:00:35 PM.
      1>Project "Z:\c_neural_network-main\c_neural_network-main\c_neural_network\c_neural_network.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt testNN.c
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt neural_net.c testNN.c
          testNN.c
+         neural_net.c
+     1>z:\c_neural_network-main\c_neural_network-main\c_neural_network\neural_net.c(36): warning C4244: 'function' : conversion from 'time_t' to 'unsigned int', possible loss of data
+         Generating Code...
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Z:\c_neural_network-main\c_neural_network-main\Debug\c_neural_network.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"Z:\c_neural_network-main\c_neural_network-main\Debug\c_neural_network.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"Z:\c_neural_network-main\c_neural_network-main\Debug\c_neural_network.lib" /MACHINE:X86 Debug\activation_functions.obj
          Debug\neural_net.obj
@@ -12,4 +15,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.01
+Time Elapsed 00:00:01.70

@@ -11,29 +11,30 @@
 
 typedef struct {
 	unsigned int input_neurons_size, hidden_neurons_size, hidden_layer_size, output_neurons_size;
-	double* inputs;
-	double* outputs;
-	double** hiddens; // If more than one hidden layer otherwise treated as double* hiddens
-	double* weights; unsigned int weight_size;
-	double* biases; unsigned int bias_size;
-	double* deltas; 
-	unsigned int total_neurons;
+	unsigned int weight_size, bias_size, total_neurons;
+	double* inputs, *weights, *outputs, *biases, *deltas;
+	double** in_hiddens; double** out_hiddens; // If more than one hidden layer otherwise treated as double* hiddens
 } ANN;
 
-// Initialize Artificial Neural Network
-void ANNNew(ANN* ann, unsigned int input_neurons_size, unsigned int hidden_neurons_size,
+// Initialize Artificial Neural Network. Update the cirre
+ANN* ANNNew(unsigned int input_neurons_size, unsigned int hidden_neurons_size,
 	unsigned int hidden_layer_size, unsigned int output_neurons_size);
 
 // Generate Random Weights from lower to upper inclusive
-void GenerateRandomWeights(ANN* ann, double lower, double upper);
+void ANNRandomWeights(ANN* ann, double lower, double upper);
 
-/* Return output neuron values after Forward Propogating once, changes delta value after output
-For PReLU and ELU Alpha must be provided [0, 1]. And for others Activations Functions 0 must be provided for alpha */
-void ForwardPropagate(ANN* ann, double const *inputs, double const *outputs, 
-	char* activation_func, double alpha, double* ans);
+// Update weights based on given array and then free the passed array
+void ANNUpdateWeights(ANN* ann, double* weights, double* biases);
+
+/*Copy contents of Total Error E value to total_error after Forward Propogating once
+E = SUMMATION(1/2 * (target - output)^2) :: Delta = (target - output)
+For PReLU and ELU Alpha must be provided [0, 1] 
+For rest of Activation Functions Alpha can be of any value since not used*/
+void ANNForwardPropagate(ANN* ann, double const *inputs, double const *outputs, 
+	char* activation_func, double alpha, double* total_error);
 
 // Return weights list after Back Propagating once
-double* BackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate); 
+double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate); 
 
 // Disposes of all allocated memory for ANN
 void ANNDispose(ANN* ann);

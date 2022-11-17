@@ -1,13 +1,15 @@
 #include "neural_net.h"
 
-
-
-
 int main()
 {
-	double w[2] = {.15, .2};
-	double x[2] = {.05, .1};
+	ANN* ann = ANNNew(2, 2, 1, 2);
+	double inputs[] = { .05, .10 };
+	double outputs[] = { .01, .99 };
+	ANNUpdateWeights(ann, (double[]){ .15, .2, .25, .3, .4, .45, .5, .55 }, (double[]){ .35, .60 });
 
-	double result = neuron(x, w, 2, .35, "SIGMOID", 0);
-	printf("%.7f ", result);
+	double* total_error = malloc(sizeof(double));
+	ANNForwardPropagate(ann, inputs, outputs, "SIGMOID", 0, total_error);
+	printf("%.9f ", *total_error);
+
+	scanf_s("%d");
 }

@@ -1,30 +1,36 @@
 #include "neural_net.h"
 
-void ANNNew(ANN* ann, unsigned int input_neurons_size, unsigned int hidden_neurons_size,
+ANN* ANNNew(unsigned int input_neurons_size, unsigned int hidden_neurons_size,
 	unsigned int hidden_layer_size, unsigned int output_neurons_size)
 {
+	ANN* ann = malloc(sizeof(ANN));
 	ASSERT(ann && input_neurons_size && hidden_neurons_size && hidden_layer_size && output_neurons_size);
 	ann->input_neurons_size = input_neurons_size;
 	ann->hidden_neurons_size = hidden_neurons_size;
 	ann->hidden_layer_size = hidden_layer_size;
 	ann->output_neurons_size = output_neurons_size;
-	ann->weight_size = (input_neurons_size*hidden_neurons_size) +
-		(hidden_neurons_size*hidden_layer_size) + (output_neurons_size*hidden_neurons_size);
+	ann->weight_size = (input_neurons_size*hidden_neurons_size) + (hidden_neurons_size*
+		(hidden_layer_size - 1)) + (output_neurons_size*hidden_neurons_size);
 	ann->bias_size = ann->hidden_layer_size + 1;
 
 	ann->inputs = malloc(ann->input_neurons_size*sizeof(double));
-	*ann->hiddens = (double**)malloc(ann->hidden_layer_size*sizeof(double*));
+	ann->in_hiddens = malloc(ann->hidden_layer_size*sizeof(double*));
 	for (unsigned int i = 0; i < ann->hidden_layer_size; i++)
-		(ann->hiddens)[i] = malloc(ann->hidden_neurons_size*sizeof(double));
+		(ann->in_hiddens)[i] = malloc(ann->hidden_neurons_size*sizeof(double));
+	ann->out_hiddens = malloc(ann->hidden_layer_size*sizeof(double*));
+	for (unsigned int i = 0; i < ann->hidden_layer_size; i++)
+		(ann->out_hiddens)[i] = malloc(ann->hidden_neurons_size*sizeof(double));
 	ann->outputs = malloc(ann->output_neurons_size*sizeof(double));
 	ann->weights = malloc(ann->weight_size*sizeof(double));
 	ann->biases = malloc(ann->bias_size*sizeof(double));
 	ann->deltas = malloc(ann->output_neurons_size*sizeof(double));
 	ann->total_neurons = input_neurons_size + (hidden_neurons_size*hidden_layer_size) 
 		+ output_neurons_size;
+
+	return ann;
 }
 
-void GenerateRandomWeights(ANN* ann, double lower, double upper)
+void ANNRandomWeights(ANN* ann, double lower, double upper)
 {
 	ASSERT(ann && (upper > lower));
 	srand(time(NULL));   // Initialization, should only be called once.
@@ -40,13 +46,26 @@ void GenerateRandomWeights(ANN* ann, double lower, double upper)
 	}
 }
 
+void ANNUpdateWeights(ANN* ann, double* weights, double* biases)
+{
+	ASSERT(ann && weights && biases);
+	for (unsigned int i = 0; i < ann->weight_size; i++)
+		ann->weights[i] = weights[i];
+	for (unsigned int i = 0; i < ann->bias_size; i++)
+		ann->biases[i] = biases[i];
+}
+
 double ActivationFunction(double input, double alpha, char* activation_func)
 {
 	ASSERT(activation_func);
 	if (activation_func = "SIGMOID")
 		return SIGMOID(input);
+	else if (activation_func = "D_SIGMOID")
+		return D_SIGMOID(input);
 	else if (activation_func = "TANH")
 		return TANH(input);
+	else if (activation_func = "D_TANH")
+		return D_TANH(input);
 	else if (activation_func = "ReLU")
 		return ReLU(input);
 	else if (activation_func = "DReLU")
@@ -75,8 +94,8 @@ void* memory_copy(void* dest, const void* src, unsigned int n)
 	return dest;
 }
 
-void ForwardPropagate(ANN* ann, double const *inputs, double const *outputs,
-	char* activation_func, double alpha, double* ans)
+void ANNForwardPropagate(ANN* ann, double const *inputs, double const *outputs,
+	char* activation_func, double alpha, double* total_error)
 {
 	ASSERT(ann && inputs && outputs && activation_func);
 	if (ActivationFunction(1.0, 0.5, activation_func) == -DOUBLE_MAX)
@@ -89,29 +108,29 @@ void ForwardPropagate(ANN* ann, double const *inputs, double const *outputs,
 	for (unsigned int i = 0; i < ann->input_neurons_size; i++)
 		ann->inputs[i] = inputs[i];
 	// Hidden Layer Calculations
+	unsigned int weight_index = 0;
 	for (unsigned int h = 0; h < ann->hidden_layer_size; h++){
-		for (unsigned int i = 0; i, ann->hidden_neurons_size; i++)
+		for (unsigned int i = 0; i < ann->hidden_neurons_size; i++)
 		{
-			if (h == 0) // Input to First Hidden Layer
+			if (h == 0) // Input to First Hidden Layers
 			{ 
-				ann->hiddens[h][i] = 0;
+				ann->in_hiddens[h][i] = 0;
 				for (unsigned int j = 0; j < ann->input_neurons_size; j++)
 				{
-					ann->hiddens[h][i] += ann->inputs[j] * ann->weights[j];
+					ann->in_hiddens[h][i] += ann->inputs[j] * ann->weights[weight_index++];
 				}
-				ann->hiddens[h][i] += ann->biases[h];
-				ann->hiddens[h][i] = ActivationFunction(ann->hiddens[h][i], alpha, activation_func);
+				ann->in_hiddens[h][i] += ann->biases[h];
+				ann->out_hiddens[h][i] = ActivationFunction(ann->in_hiddens[h][i], alpha, activation_func);
 			}
 			else // First Hidden Layer to Preceeding Hidden Layer
 			{
-				ann->hiddens[h][i] = 0;
+				ann->in_hiddens[h][i] = 0;
 				for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
 				{
-					ann->hiddens[h][i] += ann->hiddens[h - 1][i] * ann->weights[ann->input_neurons_size 
-						+ (h * ann->hidden_neurons_size) + j];
+					ann->in_hiddens[h][i] += ann->in_hiddens[h - 1][i] * ann->weights[weight_index++];
 				}
-				ann->hiddens[h][i] += ann->biases[h];
-				ann->hiddens[h][i] = ActivationFunction(ann->hiddens[h][i], alpha, activation_func);
+				ann->in_hiddens[h][i] += ann->biases[h];
+				ann->out_hiddens[h][i] = ActivationFunction(ann->in_hiddens[h][i], alpha, activation_func);
 			}
 		}
 	}
@@ -121,18 +140,31 @@ void ForwardPropagate(ANN* ann, double const *inputs, double const *outputs,
 		ann->outputs[i] = 0;
 		for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
 		{
-			ann->outputs[i] += ann->hiddens[ann->hidden_layer_size - 1][j] * ann->weights[
-				ann->input_neurons_size + ((ann->hidden_layer_size - 1)*(ann->hidden_neurons_size))];
+			ann->outputs[i] += ann->in_hiddens[ann->hidden_layer_size - 1][j] * ann->weights[weight_index++];
 		}
 		ann->outputs[i] += ann->biases[ann->hidden_layer_size];
 		ann->outputs[i] = ActivationFunction(ann->outputs[i], alpha, activation_func);
 	}
+	double error = 0;
 	// Calculating Deltas
 	for (unsigned int i = 0; i < ann->output_neurons_size; i++)
-		ann->deltas[i] = ann->outputs[i] - outputs[i];
-
-	// Returning Value
-	ans = malloc(ann->output_neurons_size*sizeof(double));
-	memory_copy(ans, ann->outputs, ann->output_neurons_size*sizeof(double));
+	{
+		ann->deltas[i] = outputs[i] - ann->outputs[i];
+		error += 0.5*(pow(ann->deltas[i], 2));
+	}
+	// Returning total_error
+	memory_copy(total_error, &error, sizeof(double));
+	
 }
 
+double* BackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate)
+{
+	/* Backpropogate from output neuron to last hidden layer finding pd(E)/pd(Wi)
+	:: pd : Partial Derivative, E : Total Error, Wi: Weight at index i i=[weight_size, 0] */
+	for (unsigned int i = ann->weight_size - 1; i >= 0; i--)
+	{
+
+	}
+
+
+}
