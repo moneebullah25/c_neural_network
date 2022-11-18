@@ -20,7 +20,8 @@ ANN* ANNNew(unsigned int input_neurons_size, unsigned int hidden_neurons_size,
 	ann->out_hiddens = malloc(ann->hidden_layer_size*sizeof(double*));
 	for (unsigned int i = 0; i < ann->hidden_layer_size; i++)
 		(ann->out_hiddens)[i] = malloc(ann->hidden_neurons_size*sizeof(double));
-	ann->outputs = malloc(ann->output_neurons_size*sizeof(double));
+	ann->in_outputs = malloc(ann->output_neurons_size*sizeof(double));
+	ann->out_outputs = malloc(ann->output_neurons_size*sizeof(double));
 	ann->weights = malloc(ann->weight_size*sizeof(double));
 	ann->biases = malloc(ann->bias_size*sizeof(double));
 	ann->deltas = malloc(ann->output_neurons_size*sizeof(double));
@@ -137,19 +138,19 @@ void ANNForwardPropagate(ANN* ann, double const *inputs, double const *outputs,
 	// Output Layer Calculations
 	for (unsigned int i = 0; i < ann->output_neurons_size; i++)
 	{
-		ann->outputs[i] = 0;
+		ann->out_outputs[i] = 0;
 		for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
 		{
-			ann->outputs[i] += ann->in_hiddens[ann->hidden_layer_size - 1][j] * ann->weights[weight_index++];
+			ann->out_outputs[i] += ann->out_hiddens[ann->hidden_layer_size - 1][j] * ann->weights[weight_index++];
 		}
-		ann->outputs[i] += ann->biases[ann->hidden_layer_size];
-		ann->outputs[i] = ActivationFunction(ann->outputs[i], alpha, activation_func);
+		ann->in_outputs[i] += ann->biases[ann->hidden_layer_size];
+		ann->out_outputs[i] = ActivationFunction(ann->in_outputs[i], alpha, activation_func);
 	}
 	double error = 0;
 	// Calculating Deltas
 	for (unsigned int i = 0; i < ann->output_neurons_size; i++)
 	{
-		ann->deltas[i] = outputs[i] - ann->outputs[i];
+		ann->deltas[i] = outputs[i] - ann->out_outputs[i];
 		error += 0.5*(pow(ann->deltas[i], 2));
 	}
 	// Returning total_error
@@ -157,14 +158,52 @@ void ANNForwardPropagate(ANN* ann, double const *inputs, double const *outputs,
 	
 }
 
-double* BackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate)
+double* BackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate, char* activation_func)
 {
 	/* Backpropogate from output neuron to last hidden layer finding pd(E)/pd(Wi)
-	:: pd : Partial Derivative, E : Total Error, Wi: Weight at index i i=[weight_size, 0] */
-	for (unsigned int i = ann->weight_size - 1; i >= 0; i--)
+	:: pd : Partial Derivative, E : Total Error, Wi: Weight at index i */
+	unsigned int weight_index = ann->weight_size - 1;
+	double* new_weights = (double *)malloc(ann->weight_size*sizeof(double));
+	ASSERT(new_weights);
+	
+	for (unsigned int i = 0; i < ann->output_neurons_size; i++)
 	{
-
+		double dEt_doi = -(outputs[i] - ann->out_outputs[i]); // delta(E_total)/delta(out_output_i)
+		double doi_dni = ActivationFunction(ann->in_outputs[i], 0, activation_func); // delta(out_output_i)/delta(net_output_i)
+		for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
+		{
+			new_weights[weight_index] = learning_rate*(dEt_doi * doi_dni * ann->out_hiddens[ann->hidden_layer_size - 1][j]);
+			new_weights[weight_index] += ann->weights[weight_index];
+			weight_index--;
+		}
+	}
+	
+	if (ann->hidden_layer_size > 1)
+	{
+		/* Backpropogate from last hidden layer to successor hidden layer finding 
+		:: pd : Partial Derivative, E : Total Error, Wi: Weight at index i {NOT IMPLEMENTED}*/
 	}
 
-
+	/* Backpropogate Hidden Layer Calculations finding pd(E)/pd(Wi)
+	:: pd : Partial Derivative, E : Total Error, Wi: Weight at index i */
+	for (unsigned int h = 0; h < ann->hidden_layer_size; h++) {
+		for (unsigned int i = 0; i < ann->hidden_neurons_size; i++)
+		{
+			if (h == 0) // Input to First Hidden Layers
+			{
+				double dEt_doi = 0; // delta(E_total)/delta(out_output_i)
+				for (unsigned int i = 0; i < ann->output_neurons_size; i++)
+				{
+					dEt_doi += -(outputs[i] - ann->out_outputs[i]) * 
+						ActivationFunction(ann->in_outputs[i], 0, activation_func) * 
+						ann->weights[i];
+					
+				}
+			}
+			else // First Hidden Layer to Preceeding Hidden Layer
+			{
+				
+			}
+		}
+	}
 }

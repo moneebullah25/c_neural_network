@@ -12,7 +12,7 @@
 typedef struct {
 	unsigned int input_neurons_size, hidden_neurons_size, hidden_layer_size, output_neurons_size;
 	unsigned int weight_size, bias_size, total_neurons;
-	double* inputs, *weights, *outputs, *biases, *deltas;
+	double *inputs, *weights, *in_outputs, *out_outputs, *biases, *deltas;
 	double** in_hiddens; double** out_hiddens; // If more than one hidden layer otherwise treated as double* hiddens
 } ANN;
 
