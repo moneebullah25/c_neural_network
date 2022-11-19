@@ -34,7 +34,7 @@ void ANNForwardPropagate(ANN* ann, double const *inputs, double const *outputs,
 	char* activation_func, double alpha, double* total_error);
 
 // Return weights list after Back Propagating once
-double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate); 
+double* ANNBackwardPropagate(ANN* ann, double const* inputs, double const* outputs, double learning_rate, char* activation_func);
 
 // Disposes of all allocated memory for ANN
 void ANNDispose(ANN* ann);

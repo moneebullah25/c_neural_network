@@ -9,6 +9,7 @@ int main()
 
 	double* total_error = malloc(sizeof(double));
 	ANNForwardPropagate(ann, inputs, outputs, "SIGMOID", 0, total_error);
+	ANNBackwardPropagate(ann, inputs, outputs, 0.5, "D_SIGMOID");
 	printf("%.9f ", *total_error);
 
 	scanf_s("%d");
