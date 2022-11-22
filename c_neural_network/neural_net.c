@@ -178,12 +178,6 @@ double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outpu
 			weight_index--;
 		}
 	}
-	
-	if (ann->hidden_layer_size > 1)
-	{
-		/* Backpropogate from last hidden layer to successor hidden layer finding 
-		:: pd : Partial Derivative, E : Total Error, Wi: Weight at index i {NOT IMPLEMENTED}*/
-	}
 
 	/* Backpropogate Hidden Layer Calculations finding pd(E)/pd(Wi)
 	:: pd : Partial Derivative, E : Total Error, Wi: Weight at index i */
@@ -198,11 +192,12 @@ double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outpu
 					{
 						dEt_doi += -(outputs[j] - ann->out_outputs[j]) *
 							ActivationFunction(ann->in_outputs[j], 0, activation_func) *
-							ann->weights[((ann->input_neurons_size)*(ann->hidden_neurons_size) - 1) + 
-							(i * ann->hidden_neurons_size) + ()];
+							ann->weights[(ann->input_neurons_size*ann->hidden_neurons_size) + (i + (j * 2))];
 					}
-					dEt_doi *= ActivationFunction(ann->in_hiddens[h][i], 0, activation_func) * ann->weights[i];
-
+					dEt_doi *= ActivationFunction(ann->in_hiddens[h][i], 0, activation_func) * ann->inputs[g];
+					new_weights[weight_index] = learning_rate*dEt_doi;
+					new_weights[weight_index] = ann->weights[weight_index] - new_weights[weight_index];
+					weight_index--;
 				}
 				else // First Hidden Layer to Preceeding Hidden Layer
 				{
@@ -212,5 +207,43 @@ double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outpu
 		}
 	}
 
+	for (unsigned int i = 0; i < ann->weight_size; i++)
+		ann->weights[i] = new_weights[i];
+
 	return new_weights;
 }
+
+//double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate, char* activation_func)
+//{
+//	// Hidden Layer Calculations
+//	unsigned int weight_index = 0;
+//	for (unsigned int h = 0; h < ann->hidden_layer_size; h++){
+//		for (unsigned int i = 0; i < ann->hidden_neurons_size; i++)
+//		{
+//			if (h == 0) // Input to First Hidden Layers
+//			{
+//				double dEt_dwi = 0; // delta(E_total)/delta(wi)
+//				for (unsigned int j = 0; j < ann->input_neurons_size; j++)
+//				{
+//					weight_index++;
+//				}
+//			}
+//			else // First Hidden Layer to Preceeding Hidden Layer
+//			{
+//				ann->in_hiddens[h][i] = 0;
+//				for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
+//				{
+//					weight_index++;
+//				}
+//			}
+//		}
+//	}
+//	// Output Layer Calculations
+//	for (unsigned int i = 0; i < ann->output_neurons_size; i++)
+//	{
+//		for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
+//		{
+//			weight_index++;
+//		}
+//	}
+//}
