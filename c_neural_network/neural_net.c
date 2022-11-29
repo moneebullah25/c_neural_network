@@ -167,6 +167,7 @@ double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outpu
 	double* new_weights = (double *)malloc(ann->weight_size*sizeof(double));
 	ASSERT(new_weights);
 	
+	// Weight Updation from Output layer to last hidden layer
 	for (long int i = ann->output_neurons_size - 1; i >= 0; i--)
 	{
 		double dEt_doi = -(outputs[i] - ann->out_outputs[i]); // delta(E_total)/delta(out_output_i)
@@ -185,7 +186,7 @@ double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outpu
 		for (long int h = ann->hidden_layer_size - 1; h >= 0; h--) {
 			for (long int i = ann->hidden_neurons_size - 1; i >= 0; i--)
 			{
-				if (h == 0) // Input to First Hidden Layers
+				if (h == 0 && ann->hidden_layer_size == 1) // Input to First Hidden Layers
 				{
 					double dEt_doi = 0; // delta(E_total)/delta(out_output_i)
 					for (long int j = ann->output_neurons_size - 1; j >= 0; j--)
@@ -201,7 +202,7 @@ double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outpu
 				}
 				else // First Hidden Layer to Preceeding Hidden Layer
 				{
-					//To be implemented
+					
 				}
 			}
 		}
@@ -213,37 +214,24 @@ double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outpu
 	return new_weights;
 }
 
-//double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate, char* activation_func)
-//{
-//	// Hidden Layer Calculations
-//	unsigned int weight_index = 0;
-//	for (unsigned int h = 0; h < ann->hidden_layer_size; h++){
-//		for (unsigned int i = 0; i < ann->hidden_neurons_size; i++)
-//		{
-//			if (h == 0) // Input to First Hidden Layers
-//			{
-//				double dEt_dwi = 0; // delta(E_total)/delta(wi)
-//				for (unsigned int j = 0; j < ann->input_neurons_size; j++)
-//				{
-//					weight_index++;
-//				}
-//			}
-//			else // First Hidden Layer to Preceeding Hidden Layer
-//			{
-//				ann->in_hiddens[h][i] = 0;
-//				for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
-//				{
-//					weight_index++;
-//				}
-//			}
-//		}
-//	}
-//	// Output Layer Calculations
-//	for (unsigned int i = 0; i < ann->output_neurons_size; i++)
-//	{
-//		for (unsigned int j = 0; j < ann->hidden_neurons_size; j++)
-//		{
-//			weight_index++;
-//		}
-//	}
-//}
+double* ANNBackwardPropagate(ANN* ann, double const *inputs, double const *outputs, double learning_rate, char* activation_func)
+{
+	// Updating Hidden Neurons Weights
+	for (long int on = ann->output_neurons_size - 1; on >= 0; on--)
+	{
+		for (long int hl = ann->hidden_layer_size - 1; hl >= 0; hl--)
+		{
+			for (long int hn = ann->hidden_neurons_size - 1; hn >= 0; hn--)
+			{
+				for (long int in = ann->input_neurons_size - 1; in >= 0; in--)
+				{
+
+				}
+			}
+		}
+	}
+	
+
+	// Updating Input to First Hidden Neurons Weights
+
+}

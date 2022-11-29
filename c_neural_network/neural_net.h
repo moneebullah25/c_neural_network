@@ -33,7 +33,7 @@ For rest of Activation Functions Alpha can be of any value since not used*/
 void ANNForwardPropagate(ANN* ann, double const *inputs, double const *outputs, 
 	char* activation_func, double alpha, double* total_error);
 
-// Return weights list after Back Propagating once
+// Return weights list after Back Propagating once and also update the existing weights
 double* ANNBackwardPropagate(ANN* ann, double const* inputs, double const* outputs, double learning_rate, char* activation_func);
 
 // Disposes of all allocated memory for ANN
